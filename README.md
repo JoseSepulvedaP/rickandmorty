@@ -17,10 +17,17 @@ Por ultimo luego que las dependencias esten instaladas ejecutar el comando `npm 
 ## Ejecutar pruebas en rickandmortyapi
 Primero que todo ingresa al directorio de la aplicacion ejecutando el siguiente comando `cd rickandmortyapi`. 
 Instalar dependencias ejecutando el comando `npm install`.
-Por ultimo luego que las dependencias esten instaladas, antes de ejecutar las pruebas es necesario correr `redis-server` de manera local y comentar el host y puerto definido en la conexion a redis necesaria para se usada en docker. El archivo a comentar se encuentra en la ruta  `./server/routes/authentication.js` dejarlo de la siguiente manera  `const redisClient = redis.createClient({
+
+Por ultimo luego que las dependencias esten instaladas, antes de ejecutar las pruebas es necesario correr `redis-server` de manera local y comentar el host y puerto definido en la conexion a redis necesaria para se usada en docker. El archivo a comentar se encuentra en la ruta  `./server/routes/authentication.js` dejarlo de la siguiente manera
+
+`const redisClient = redis.createClient({`
+
     // host: 'redis-server',
+
     // port: 6379
-});`
+    
+`});`
+
 Luego de comentar lo mencionado ejecutar el comando `npm test` para correr las pruebas.
 De igual manera se puede ejecutar localmente la api con el comando `npm run start` y consumirla en esta url `http://localhost:3000`.
 
