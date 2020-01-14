@@ -1,0 +1,33 @@
+{
+  "name": "rickandmortyapi",
+  "version": "1.0.0",
+  "description": "Rick and Morty API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoseSepulvedaP/rickandmortyapi.git"
+  },
+  "author": "Jose Sepulveda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoseSepulvedaP/rickandmortyapi/issues"
+  },
+  "homepage": "https://github.com/JoseSepulvedaP/rickandmortyapi#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.7",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "node-pre-gyp": "0.12.0",
+    "redis": "^2.8.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "mocha": "^7.0.0",
+    "supertest": "^4.0.2"
+  }
+}

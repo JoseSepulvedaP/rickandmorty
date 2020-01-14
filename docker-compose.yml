@@ -1,0 +1,9 @@
+version: '3'
+services:
+  redis-server: 
+    image: 'redis'
+  node:
+    image: 'node/node-api:latest'
+    ports:
+      - '3005:3000'
+    tty: true
