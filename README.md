@@ -12,7 +12,9 @@ Luego de tener listas nuestras imagenes en docker es necesario ejecutarlas en co
 ## Correr la aplicacion rickandmortyapp de manera local
 Primero que todo ingresa al directorio de la aplicacion ejecutando el siguiente comando `cd rickandmortyapp`. 
 Instalar dependencias ejecutando el comando `yarn install`.
-Por ultimo luego que las dependencias esten instaladas ejecutar el comando `npm run start` para correr la aplicacion.
+Por ultimo luego que las dependencias esten instaladas ejecutar el comando `npm run start` para correr la aplicacion. 
+
+Si necesita consumir la api de manera local y no mediante docker, es necesario modificar el puerto definido en la url configurada en el archivo `./src/config/config.js` cambiando el `3005` por `3000`  `export const API_URL = 'http://localhost:3005'`.
 
 ## Ejecutar pruebas en rickandmortyapi
 Primero que todo ingresa al directorio de la aplicacion ejecutando el siguiente comando `cd rickandmortyapi`. 

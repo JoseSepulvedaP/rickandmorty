@@ -1,43 +1,177 @@
-import React, { useState } from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import "./Login.css";
+import React, { Component } from 'react';
+import './Forms.css';
+import { API_URL } from '../config/config';
+import Swal from 'sweetalert2';
 
-export default function Login(props) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState();
+class LoginBox extends Component {
 
-  function validateForm() {
-    return username.length > 0 && password.length > 0;
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      password: '',
+      errors: []
+    };
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  onUsernameChange(e) {
+    this.setState({username: e.target.value});
+    this.clearValidationErr('username');
   }
 
-  return (
-    <div className="Login">
-      <form onSubmit={handleSubmit}>
-        <FormGroup controlId="username" bsSize="large">
-          <ControlLabel>Nombre de Usuario</ControlLabel>
-          <FormControl
-            autoFocus
-            type="username"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-          />
-        </FormGroup>
-        <FormGroup controlId="password" bsSize="large">
-          <ControlLabel>Password</ControlLabel>
-          <FormControl
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            type="password"
-          />
-        </FormGroup>
-        <Button block bsSize="large" disabled={!validateForm()} type="submit">
+  onPasswordChange(e) {
+    this.setState({password: e.target.value});
+    this.clearValidationErr('password');
+  }
+
+  showValidationErr(elm, msg) {
+    this.setState((prevState) => ({
+      errors: [
+        ...prevState.errors, {
+          elm,
+          msg
+        }
+      ]
+    }));
+  }
+
+  clearValidationErr(elm) {
+    this.setState((prevState) => {
+      let newArr = [];
+      for (let err of prevState.errors) {
+        if (elm !== err.elm) {
+          newArr.push(err);
+        }
+      }
+      return {errors: newArr};
+    });
+  }
+
+
+  login() {
+    let data = {
+      username: this.state.username ? this.state.username : '',
+      password: this.state.password ? this.state.password : ''
+    }
+    fetch(`${API_URL}/login`, {
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }).then(res => res.json())
+    .catch(error => {
+      Swal.fire({
+        title: 'No es posible iniciar sesion',
+        text: 'Es imposible conectarse con el servidor, favor intente mas tarde',
+        icon: 'error',
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'OK'
+      }).then((result) => {
+        if (result.value) {
+          this.render();
+        }
+      });
+    })
+    .then(response => 
+    {
+      if (!response.ok) {
+        Swal.fire({
+          title: response.err.message,
+          text: response.err.message === 'No existe el usuario, favor registrarse' ? 'Desea registrarse?' : '',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK'
+        }).then((result) => {
+          if (result.value) {
+            if (response.err.message !== 'No existe el usuario, favor registrarse') {
+                this.render();
+            } else {
+              this.props.callback();
+            }
+            
+          }
+        });
+      } else {
+        this.props.route(response.token);
+      }
+    });
+  }
+
+  submitLogin(e) {
+
+    if (this.state.username === '') {
+      this.showValidationErr('username', 'El campo Usuario no puede estar vacío');
+    }
+    if (this.state.password === '') {
+      this.showValidationErr('password', 'El campo Contraseña no puede estar vacío');
+    }
+
+    if (this.state.username !== '' && this.state.password !== '') {
+        this.login();
+    }
+
+  }
+
+  render() {
+
+    let usernameErr = null;
+    let passwordErr = null;
+
+    for (let err of this.state.errors) {
+      if (err.elm == 'username') {
+        usernameErr = err.msg;
+      }
+      if (err.elm == 'password') {
+        passwordErr = err.msg;
+      }
+    }
+    
+    return (
+      <div className="inner-container">
+        <div className="header">
           Login
-        </Button>
-      </form>
-    </div>
-  );
+        </div>
+        <div className="box">
+
+        <form></form>
+          <div className="input-group">
+            <label htmlFor="username">Usuario</label>
+            <input
+              type="text"
+              name="username"
+              className="login-input"
+              placeholder="Username"
+              onChange={this.onUsernameChange.bind(this)}/>
+              <small className="danger-error">
+                {usernameErr ? usernameErr : ''}
+              </small>
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              name="password"
+              className="login-input"
+              placeholder="Password"
+              onChange={this.onPasswordChange.bind(this)}/>
+              <small className="danger-error">
+                {passwordErr ? passwordErr : ''}
+              </small>
+          </div>
+
+          <button
+            type="button"
+            className="login-btn"
+            onClick={this.submitLogin.bind(this)}>Login
+          </button>
+
+        </div>
+      </div>
+    );
+  }
+
 }
+
+export default LoginBox;
